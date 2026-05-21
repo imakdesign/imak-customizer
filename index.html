@@ -1,0 +1,190 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>iMaK Customizer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald&family=Pacifico&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+	
+	<div class="mobile-warning-overlay">
+    <div class="mobile-warning-content">
+        <h2>🖥️ Desktop Recommended</h2>
+        <p>Our advanced design studio requires a larger screen to give you the best experience.</p>
+        <p>Please visit this page on a desktop or laptop computer to customize your product!</p>
+    </div>
+</div>
+
+<div class="lightbox-overlay">
+    <div class="customizer-lightbox">
+        <div class="customizer-content">
+            
+            <div class="product-preview-background">
+                
+                <div class="view-toggle">
+                    <button class="active">Front</button>
+                    <button>Back</button>
+                </div>
+
+                <div class="product-mockup-boundary">
+                    <img src="https://via.placeholder.com/400x469/EFEFEF/707070?text=Product+Mockup" class="product-image-background" alt="Product" style="width:100%; height:100%; object-fit:contain;">
+                    <canvas id="product-canvas" width="400" height="469" style="position: absolute; top: 0; left: 0;"></canvas>
+                </div>
+
+                <div class="color-selector-module">
+                    <div class="color-top-row">
+                        <span class="color-selector-header">Color Selector</span>
+                        <div class="hex-code-popup">
+                            <span class="hex-code-prefix">#</span>
+                            <input type="text" class="hex-code-box" value="FFFFFF" maxlength="6">
+                        </div>
+                        <div class="fill-border-toggles">
+                            <button class="fill-toggle active">Fill</button>
+                            <button class="border-toggle">Border</button>
+                        </div>
+                    </div>
+
+                    <div class="color-bottom-row">
+                        <button class="color-swatch" style="background-color: #FF0000;"></button>
+                        <button class="color-swatch" style="background-color: #FF7F00;"></button>
+                        <button class="color-swatch" style="background-color: #FFFF00;"></button>
+                        <button class="color-swatch" style="background-color: #00FF00;"></button>
+                        <button class="color-swatch" style="background-color: #0000FF;"></button>
+                        <button class="color-swatch" style="background-color: #4B0082;"></button>
+                        <button class="color-swatch" style="background-color: #9400D3;"></button>
+                        <button class="color-swatch" style="background-color: #FF00FF;"></button>
+                        <button class="color-swatch" style="background-color: #000000;"></button>
+                        
+                        <button class="color-swatch transparent-selector">
+                            <svg viewBox="0 0 20 20" width="100%" height="100%">
+                                <line x1="3" y1="17" x2="17" y2="3" stroke="#FF0000" stroke-width="1.5"/>
+                            </svg>
+                        </button>
+                        
+                        <button class="color-swatch" style="background-color: #FFFFFF;"></button>
+                        <button class="color-swatch custom-color-selector"></button>
+                    </div>
+                    
+                    <div class="color-slider-row" style="display: none;">
+                        <span class="slider-label">Border Size: <span class="border-size-value">5</span>px</span>
+                        <input type="range" class="custom-slider border-size-slider" min="0" max="30" value="5">
+                    </div>
+                </div>
+            </div>
+
+            <div class="tool-panel-background">
+                
+                <div class="header-area">
+                    <h2 class="personalize-your-product">Personalize Your Product</h2>
+                    <button class="close-button">X</button>
+                    <div class="header-border"></div>
+                </div>
+
+                <div class="tab-menu">
+                    <button class="active" id="tab-images">Images</button>
+                    <span class="images-text-divider">|</span>
+                    <button id="tab-text">Text</button>
+                    <span class="text-clipart-divider">|</span>
+                    <button id="tab-clipart">Clipart</button>
+                    <span class="clipart-shapes-divider">|</span>
+                    <button id="tab-shapes">Shapes</button>
+                </div>
+
+                <div class="panel-images" style="display: flex;">
+                    <label class="upload-button" style="display: flex; justify-content: center; align-items: center;">
+                        <input type="file" id="image-upload-input" accept="image/png, image/jpeg, image/svg+xml" style="display: none;">
+                        + Upload Your Photo / Logo
+                    </label>
+                    <div class="images-grid-holder">
+                        <div></div><div></div><div></div><div></div>
+                        <div></div><div></div><div></div><div></div>
+                    </div>
+                </div>
+                
+                <div class="panel-text" style="display: none;">
+                    <button class="primary-text-btn add-text-button">+ Add New Text</button>
+                    
+                    <div class="text-input-guide">Text Input</div>
+                    <input type="text" class="text-input-box" placeholder="Type here...">
+                    
+                    <div class="font-size-guide-text">Font Size: <span class="font-size-value">40</span>px</div>
+                    <input type="range" class="custom-slider font-size-slider" min="10" max="150" value="40">
+                    
+                    <div class="font-selection-guide-text">Font Selection</div>
+                    
+                    <div class="custom-font-dropdown">
+                        <div class="tooltip-icon">?
+                            <span class="tooltip-text">Click "Browse Adobe Fonts" below to explore millions of options. Find one you love, copy its name, and paste it in the box!</span>
+                        </div>
+                        <input type="text" class="font-search-box" placeholder="Search fonts...">
+                        <span class="dropdown-arrow">▼</span>
+                        <div class="font-dropdown-list"></div>
+                    </div>
+
+                    <div class="adobe-fonts-section">
+                        <a href="https://fonts.adobe.com/" target="_blank" class="primary-text-btn adobe-btn">Browse Adobe Fonts ↗</a>
+                        <input type="text" class="adobe-request-box" placeholder="Paste Adobe Font Name Here...">
+                    </div>
+                </div>
+
+                <div class="panel-clipart" style="display: none;">
+                    <div class="clipart-grid-holder">
+                        <div class="clipart-grid" id="clipart-grid-container"></div>
+                    </div>
+                </div>
+
+                <div class="panel-shapes" style="display: none;">
+                    <div class="shapes-grid-holder">
+                        <div class="shapes-grid">
+                            <button class="square-button"><svg width="40" height="40" viewBox="0 0 60 60" fill="#707070"><rect x="5" y="5" width="50" height="50"/></svg></button>
+                            <button class="rectangle-button"><svg width="40" height="40" viewBox="0 0 60 60" fill="#707070"><rect x="0" y="15" width="60" height="30"/></svg></button>
+                            <button class="rounded-square-button"><svg width="40" height="40" viewBox="0 0 60 60" fill="#707070"><rect x="5" y="5" width="50" height="50" rx="12"/></svg></button>
+                            <button class="capsule-button"><svg width="40" height="40" viewBox="0 0 60 60" fill="#707070"><rect x="0" y="15" width="60" height="30" rx="15"/></svg></button>
+                            <button class="circle-button"><svg width="40" height="40" viewBox="0 0 60 60" fill="#707070"><circle cx="30" cy="30" r="25"/></svg></button>
+                            <button class="oval-button"><svg width="40" height="40" viewBox="0 0 60 60" fill="#707070"><ellipse cx="30" cy="30" rx="30" ry="18"/></svg></button>
+                            <button class="heart-button"><svg width="40" height="40" viewBox="0 0 60 60" fill="#707070"><path d="M30,55 l-4,-3.8C11.5,38,2,29.4,2,18.8 C2,10.1,8.8,3.2,17.2,3.2c4.8,0,9.3,2.2,12.8,5.8 c3.5,-3.6,8,-5.8,12.8,-5.8C51.2,3.2,58,10.1,58,18.8 c0,10.6,-9.5,19.2,-24.1,32.3L30,55z"/></svg></button>
+                            <button class="moon-button"><svg width="40" height="40" viewBox="0 0 60 60" fill="#707070"><path d="M50,30 A25,25 0 1,1 25,5 A18,18 0 1,0 50,30 z"/></svg></button>
+                            <button class="triangle-button"><svg width="40" height="40" viewBox="0 0 60 60" fill="#707070"><polygon points="30,5 55,55 5,55"/></svg></button>
+                            <button class="pentagon-button"><svg width="40" height="40" viewBox="0 0 60 60" fill="#707070"><polygon points="30,2 58,22 47,56 13,56 2,22"/></svg></button>
+                            <button class="star-button"><svg width="40" height="40" viewBox="0 0 60 60" fill="#707070"><polygon points="30,2 38,20 58,22 43,36 47,55 30,46 13,55 17,36 2,22 22,20"/></svg></button>
+                            <button class="diamond-button"><svg width="40" height="40" viewBox="0 0 60 60" fill="#707070"><polygon points="30,2 55,30 30,58 5,30"/></svg></button>
+                            <button class="hexagon-button"><svg width="40" height="40" viewBox="0 0 60 60" fill="#707070"><polygon points="30,2 55,16 55,44 30,58 5,44 5,16"/></svg></button>
+                            <button class="octagon-button"><svg width="40" height="40" viewBox="0 0 60 60" fill="#707070"><polygon points="17,2 43,2 58,17 58,43 43,58 17,58 2,43 2,17"/></svg></button>
+                            <button class="trapezoid-button"><svg width="40" height="40" viewBox="0 0 60 60" fill="#707070"><polygon points="15,10 45,10 55,50 5,50"/></svg></button>
+                            <button class="line-button"><svg width="40" height="40" viewBox="0 0 60 60" fill="none" stroke="#707070" stroke-width="5" stroke-linecap="round"><line x1="5" y1="30" x2="55" y2="30"/></svg></button>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="trashcan-button">
+                    <svg width="14" height="16" viewBox="0 0 14 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 4H13M4.5 4V2C4.5 1.44772 4.94772 1 5.5 1H8.5C9.05228 1 9.5 1.44772 9.5 2V4M2.5 4V13.5C2.5 14.3284 3.17157 15 4 15H10C10.8284 15 11.5 14.3284 11.5 13.5V4M5.5 7V12M8.5 7V12" stroke="#FF0000" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span class="trashcan-text">Delete Selected Item</span>
+                </button>
+
+                <button class="review-button">Review Final Proof</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="lightbox-overlay" id="review-overlay-screen" style="display: none;">
+    <div class="review-lightbox">
+        <div class="view-toggle">
+            <button class="active" id="review-Front">Front</button>
+            <button id="review-Back">Back</button>
+        </div>
+        <div class="product-preview"></div>
+        <button class="go-back-button"><span class="arrow">←</span> <span class="review-button-text">Go Back and Edit</span></button>
+        <button class="review-button">Approve Design & Add to Cart</button>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

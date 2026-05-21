@@ -1,0 +1,840 @@
+/* ======================================================= */
+/* 1. THE DARK BACKGROUND OVERLAY                          */
+/* ======================================================= */
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4; 
+    font-family: Arial, sans-serif; 
+}
+
+.lightbox-overlay {
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100vw; 
+    height: 100vh; 
+    background-color: rgba(0, 0, 0, 0.5); 
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; 
+}
+
+/* ======================================================= */
+/* 2. MAIN CUSTOMIZER WINDOW & LAYOUT PANELS               */
+/* ======================================================= */
+
+.customizer-lightbox {
+    width: 1000px; 
+    height: 600px; 
+    background-color: #FFFFFF; 
+    border: 1px solid #707070;
+    border-radius: 15px;
+    box-shadow: 0px 8px 10px rgba(0, 0, 0, 0.3); 
+    display: flex;
+    flex-direction: column; 
+}
+
+.customizer-content {
+    display: flex;
+    flex: 1; 
+}
+
+/* LEFT SIDE: PRODUCT CANVAS */
+.product-preview-background {
+    width: 50%; 
+    background-color: #FFFFFF;
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: space-between; 
+    padding: 30px 0; 
+    box-sizing: border-box;
+    border-radius: 15px 0 0 15px; 
+}
+
+.product-mockup-boundary {
+    width: 400px;
+    height: 469px;
+    position: relative;
+    overflow: hidden; 
+}
+
+/* RIGHT SIDE: TOOL PANELS */
+.tool-panel-background {
+    width: 50%; 
+    background-color: #F6F6F6;
+    padding: 30px; 
+    box-sizing: border-box; 
+    position: relative;
+    border-radius: 0 15px 15px 0; 
+}
+
+/* ======================================================= */
+/* 3. HEADER AREA & CLOSE BUTTON                           */
+/* ======================================================= */
+
+.header-area {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; 
+    margin-bottom: 25px; 
+}
+
+.personalize-your-product {
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 24px; 
+    font-weight: bold;
+    color: #707070; 
+    margin: 0;
+}
+
+.close-button {
+    background: transparent;
+    border: none;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 20px;
+    color: #7F7F7F; 
+    cursor: pointer;
+    padding: 0;
+}
+
+.header-border {
+    position: absolute;
+    bottom: -15px; 
+    width: 100%;
+    height: 1px;
+    background-color: #707070; 
+}
+
+/* ======================================================= */
+/* 4. TOGGLES & TAB MENU                                   */
+/* ======================================================= */
+
+.view-toggle {
+    display: flex;
+    justify-content: center;
+    gap: 30px; 
+    width: 100%;
+}
+
+.view-toggle button {
+    background: transparent;
+    border: none;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 22px;
+    color: #707070;
+    cursor: pointer;
+}
+
+.view-toggle button.active {
+    font-weight: bold;
+    color: #00FFED; 
+}
+
+.tab-menu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.tab-menu button {
+    background: transparent;
+    border: none;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 20px;
+    color: #707070;
+    cursor: pointer;
+}
+
+.tab-menu button.active {
+    font-weight: bold;
+    color: #00FFED;
+}
+
+.tab-menu span {
+    color: #707070; 
+    font-size: 20px;
+}
+
+/* ======================================================= */
+/* 5. ACTION BUTTONS                                       */
+/* ======================================================= */
+
+.review-button {
+    position: absolute;
+    bottom: -80px; 
+    right: -30px; 
+    width: 210px;
+    height: 50px;
+    background-color: #00FFED;
+    border: none;
+    border-radius: 15px;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 22px;
+    font-weight: bold;
+    color: #000000; 
+    box-shadow: 0px 8px 10px rgba(0, 0, 0, 0.3); 
+    cursor: pointer;
+    z-index: 10; 
+}
+
+.upload-button {
+    width: 100%;
+    height: 150px;
+    background: transparent;
+    border: 2px dashed #707070;
+    border-radius: 10px;
+    color: #707070;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 16px;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+/* ======================================================= */
+/* 6. IMAGES PANEL: UPLOAD, GRID & TRASHCAN                */
+/* ======================================================= */
+
+.panel-images {
+    width: 400px;
+    height: 445px;
+    margin: 0 auto; 
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+}
+
+.images-grid-holder {
+    display: grid;
+    grid-template-columns: repeat(4, 80px);
+    grid-template-rows: repeat(2, 80px);
+    justify-content: space-between;
+    align-content: space-between;
+    width: 400px;
+    height: 180px; 
+    margin-bottom: 25px; 
+}
+
+.images-grid-holder div {
+    width: 80px;
+    height: 80px;
+    background-color: #FFFFFF;
+    border: 1px solid #707070;
+    border-radius: 15px;
+    box-sizing: border-box;
+}
+
+.trashcan-button {
+    position: absolute;
+    bottom: 10px; 
+    left: 50%;
+    transform: translateX(-50%); 
+    width: 191px;
+    height: 32px;
+    background-color: #FFFFFF;
+    border: 1px solid #707070;
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px; 
+    cursor: pointer;
+    z-index: 10;
+}
+
+.trashcan-text {
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 15px;
+    font-weight: normal;
+    color: #FF0000; 
+}
+
+/* ======================================================= */
+/* 7. TEXT PANEL                                           */
+/* ======================================================= */
+
+.panel-text {
+    width: 400px;
+    height: 445px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px; 
+    overflow-y: auto; 
+    scrollbar-width: none; 
+    -ms-overflow-style: none;
+    padding-bottom: 20px;
+}
+.panel-text::-webkit-scrollbar {
+    display: none;
+}
+
+/* --- SHARED BUTTON STYLING --- */
+.primary-text-btn {
+    width: 358px;
+    flex-shrink: 0; 
+    height: 40px;
+    background-color: #FFFFFF;
+    border: 1px solid #707070;
+    border-radius: 15px;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 20px;
+    color: #707070;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    text-decoration: none; /* Prevents underline on the Adobe link */
+}
+
+.primary-text-btn:hover {
+    background-color: #F6F6F6;
+}
+
+.text-input-guide, 
+.font-selection-guide-text {
+    width: 358px; 
+    flex-shrink: 0;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 20px;
+    color: #707070;
+    text-align: left;
+    margin-bottom: -10px; 
+}
+
+.text-input-box {
+    width: 358px;
+    flex-shrink: 0;
+    height: 40px;
+    background-color: #FFFFFF;
+    border: 1px solid #707070;
+    border-radius: 15px;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 20px;
+    color: #707070;
+    padding: 0 15px; 
+    box-sizing: border-box;
+    outline: none; 
+}
+
+/* --- CUSTOM SEARCHABLE DROPDOWN --- */
+.custom-font-dropdown {
+    position: relative;
+    width: 358px;
+    flex-shrink: 0;
+}
+
+.font-search-box {
+    width: 100%;
+    height: 40px;
+    background-color: #FFFFFF;
+    border: 1px solid #707070;
+    border-radius: 15px;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 18px;
+    color: #707070;
+    padding: 0 35px 0 15px; 
+    box-sizing: border-box;
+    outline: none;
+}
+
+.dropdown-arrow {
+    position: absolute;
+    right: 15px;
+    top: 12px;
+    color: #707070;
+    font-size: 12px;
+    pointer-events: none; 
+}
+
+.font-dropdown-list {
+    position: absolute;
+    top: 45px;
+    left: 0;
+    width: 100%;
+    max-height: 220px;
+    background-color: #FFFFFF;
+    border: 1px solid #707070;
+    border-radius: 15px;
+    box-shadow: 0px 8px 10px rgba(0, 0, 0, 0.2);
+    z-index: 100; 
+    overflow-y: auto;
+    display: none; 
+    flex-direction: column;
+}
+
+.font-dropdown-list div {
+    padding: 10px 15px;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 18px;
+    color: #707070;
+    cursor: pointer;
+    border-bottom: 1px solid #F0F0F0;
+}
+
+.font-dropdown-list div:hover {
+    background-color: #00FFED; 
+    color: #000000;
+}
+
+/* --- TOOLTIP & ADOBE FONTS SECTION --- */
+.tooltip-icon {
+    position: absolute;
+    top: -22px; 
+    right: 5px; 
+    width: 18px;
+    height: 18px;
+    background-color: #707070;
+    color: #FFFFFF;
+    border-radius: 50%;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: help;
+    z-index: 10;
+}
+
+.tooltip-text {
+    visibility: hidden;
+    width: 250px;
+    background-color: #333333;
+    color: #FFFFFF;
+    text-align: center;
+    border-radius: 8px;
+    padding: 10px;
+    position: absolute;
+    z-index: 100;
+    bottom: 150%; 
+    right: -10px;
+    font-size: 13px;
+    font-weight: normal;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    pointer-events: none; /* Prevents the tooltip from blocking clicks */
+}
+
+/* Adds the little triangle pointing down on the tooltip */
+.tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    right: 14px;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #333333 transparent transparent transparent;
+}
+
+.tooltip-icon:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+.adobe-fonts-section {
+    width: 358px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 5px;
+    padding-top: 15px;
+    border-top: 1px dashed #CCC;
+}
+
+.adobe-request-box {
+    width: 100%;
+    height: 40px;
+    background-color: #FCF9F9;
+    border: 1px solid #707070;
+    border-radius: 15px;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 16px;
+    color: #707070;
+    padding: 0 15px;
+    box-sizing: border-box;
+    outline: none;
+}
+
+/* ======================================================= */
+/* 8. CLIPART PANEL                                        */
+/* ======================================================= */
+
+.panel-clipart {
+    width: 400px;
+    height: 445px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+}
+
+.clipart-grid-holder {
+    width: 400px;
+    height: 445px; 
+    overflow-y: auto; 
+    scrollbar-width: none; 
+    -ms-overflow-style: none;
+}
+.clipart-grid-holder::-webkit-scrollbar {
+    display: none;
+}
+
+.clipart-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 80px);
+    grid-auto-rows: 80px;
+    gap: 20px 26px; 
+    justify-content: center;
+    padding-bottom: 20px; 
+}
+
+.clipart-grid button {
+    width: 80px;
+    height: 80px;
+    background-color: #FFFFFF;
+    border: 1px solid #707070;
+    border-radius: 15px;
+    cursor: pointer;
+    box-sizing: border-box;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* ======================================================= */
+/* 9. SHAPES PANEL                                         */
+/* ======================================================= */
+
+.panel-shapes {
+    width: 400px;
+    height: 445px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+}
+
+.shapes-grid-holder {
+    width: 400px;
+    height: 445px;
+    overflow-y: auto; 
+    scrollbar-width: none; 
+    -ms-overflow-style: none;
+}
+.shapes-grid-holder::-webkit-scrollbar {
+    display: none;
+}
+
+.shapes-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 80px);
+    grid-auto-rows: 80px;
+    gap: 20px 26px; 
+    justify-content: center;
+    padding-bottom: 20px;
+}
+
+.shapes-grid button {
+    width: 80px;
+    height: 80px;
+    background-color: #FFFFFF;
+    border: 1px solid #707070;
+    border-radius: 15px;
+    cursor: pointer;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ======================================================= */
+/* 10. COLOR SELECTOR MODULE                               */
+/* ======================================================= */
+
+.color-selector-module {
+    width: 389px;
+    height: auto; /* Changed from 46px */
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* Adds perfect spacing between rows */
+}
+
+.color-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.color-selector-header {
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 15px;
+    font-weight: bold;
+    color: #707070;
+}
+
+.hex-code-popup {
+    display: none;
+    align-items: center;
+    gap: 4px;
+    margin-left: auto; 
+    margin-right: 25px; 
+}
+
+.hex-code-prefix {
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 15px;
+    color: #707070;
+}
+
+.hex-code-box {
+    width: 90px;
+    height: 19px;
+    background-color: #FFFFFF;
+    border: 1px solid #707070;
+    border-radius: 10px; 
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 12px;
+    color: #707070;
+    text-align: center;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.fill-border-toggles {
+    display: flex;
+    gap: 15px;
+}
+
+.fill-border-toggles button {
+    background: transparent;
+    border: none;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 15px;
+    color: #707070;
+    cursor: pointer;
+    padding: 0;
+}
+
+.fill-border-toggles button.active {
+    font-weight: bold;
+}
+
+.color-bottom-row {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+}
+
+.color-swatch {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1px solid #707070;
+    cursor: pointer;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.custom-color-selector {
+    background: conic-gradient(
+        #FF0000, #FFFF00, #00FF00, #00FFFF, 
+        #0000FF, #FF00FF, #FF0000
+    );
+}
+
+/* ======================================================= */
+/* 11. REVIEW SCREEN                                       */
+/* ======================================================= */
+
+.review-lightbox {
+    width: 800px;
+    height: 900px;
+    background-color: #FFFFFF;
+    border-radius: 15px;
+    box-shadow: 0px 8px 10px rgba(0, 0, 0, 0.3);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.product-preview {
+    width: 700px;
+    height: 800px;
+    margin-top: 60px; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.go-back-button {
+    position: absolute;
+    top: 50%; 
+    left: -280px; 
+    transform: translateY(-50%); 
+    width: 250px;
+    height: 50px;
+    background-color: #FF0000;
+    border: none;
+    border-radius: 15px;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 22px;
+    font-weight: bold;
+    color: #FFFFFF;
+    box-shadow: 0px 8px 10px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    z-index: 20;
+}
+
+.review-lightbox .review-button {
+    position: absolute;
+    top: 50%;
+    right: -381px; 
+    transform: translateY(-50%); 
+    width: 351px;
+    height: 50px;
+    background-color: #00FFED;
+    border: none;
+    border-radius: 15px;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 22px;
+    font-weight: bold;
+    color: #000000;
+    box-shadow: 0px 8px 10px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    z-index: 20;
+    bottom: auto;
+    left: auto;
+}
+
+/* ======================================================= */
+/* 12. FABRIC.JS CANVAS CONTAINER OVERRIDE                 */
+/* ======================================================= */
+
+.canvas-container {
+    position: absolute !important;
+    top: 0 !important; 
+    left: 0 !important; 
+    width: 400px !important;
+    height: 469px !important;
+    z-index: 5 !important;
+}
+
+/* ======================================================= */
+/* 13. CUSTOM UI SLIDERS                                   */
+/* ======================================================= */
+
+.color-slider-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.slider-label, .font-size-guide-text {
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 16px;
+    color: #707070;
+}
+
+.font-size-guide-text {
+    width: 358px;
+    text-align: left;
+    margin-top: 5px;
+    margin-bottom: -10px;
+}
+
+.font-size-slider {
+    width: 358px !important; 
+    flex-shrink: 0;
+}
+
+.border-size-slider {
+    width: 250px !important;
+}
+
+/* Make standard ugly HTML sliders look premium */
+.custom-slider {
+    -webkit-appearance: none;
+    background: transparent;
+}
+
+.custom-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 18px;
+    width: 18px;
+    border-radius: 50%;
+    background: #00FFED;
+    cursor: pointer;
+    margin-top: -7px; /* Centers the thumb on the track */
+    border: 1px solid #707070;
+}
+
+.custom-slider::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 4px;
+    cursor: pointer;
+    background: #707070;
+    border-radius: 2px;
+}
+
+/* ======================================================= */
+/* 14. MOBILE WARNING OVERLAY                              */
+/* ======================================================= */
+
+.mobile-warning-overlay {
+    display: none; /* Hidden by default on desktop */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #333333;
+    color: #FFFFFF;
+    z-index: 9999; /* Puts it on top of absolutely everything */
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 30px;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.mobile-warning-content h2 {
+    font-size: 32px;
+    color: #00FFED;
+    margin-bottom: 20px;
+}
+
+.mobile-warning-content p {
+    font-size: 18px;
+    line-height: 1.6;
+    color: #EFEFEF;
+    max-width: 400px;
+    margin: 0 auto 15px auto;
+}
+
+/* THE MAGIC TRIGGER: If the screen is smaller than 1050px */
+@media (max-width: 1050px) {
+    .lightbox-overlay {
+        display: none !important; /* Instantly hide the customizer */
+    }
+    .mobile-warning-overlay {
+        display: flex !important; /* Instantly show the warning */
+    }
+}
