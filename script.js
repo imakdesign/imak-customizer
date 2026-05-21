@@ -42,10 +42,19 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentSide = 'Front';
     
     const canvasStates = { 'Front': null, 'Back': null };
+    
+    // MAGIC INTERCEPT: Check if Squarespace is passing us a live image URL!
+    const urlParams = new URLSearchParams(window.location.search);
+    const frontImageURL = urlParams.get('frontImage') || 'https://via.placeholder.com/400x469/EFEFEF/707070?text=Front+Mockup';
+    const backImageURL = urlParams.get('backImage') || 'https://via.placeholder.com/400x469/EFEFEF/707070?text=Back+Mockup';
+
     const bgImages = {
-        'Front': 'https://via.placeholder.com/400x469/EFEFEF/707070?text=Front+Mockup',
-        'Back': 'https://via.placeholder.com/400x469/EFEFEF/707070?text=Back+Mockup'
+        'Front': frontImageURL,
+        'Back': backImageURL
     };
+    
+    // Set the initial image immediately on load
+    productBgImg.src = bgImages['Front'];
 
     function switchSide(newSide) {
         if (newSide === currentSide) return; 
@@ -433,7 +442,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let frontProofImage = null;
     let backProofImage = null;
 
-    // FIX #1: Helper function that patiently waits for the canvas to finish rendering
+    // Helper function that patiently waits for the canvas to finish rendering
     const loadState = (state) => new Promise(resolve => canvas.loadFromJSON(state, resolve));
 
     mainReviewBtn.addEventListener('click', async () => {
@@ -472,7 +481,7 @@ document.addEventListener('DOMContentLoaded', () => {
         reviewOverlay.style.display = 'flex';
     });
 
-    // FIX #2: Function to brilliantly composite the transparent design over the shirt background
+    // Function to brilliantly composite the transparent design over the shirt background
     function renderReviewScreen(side) {
         const imgData = side === 'Front' ? frontProofImage : backProofImage;
         const bgUrl = bgImages[side];
