@@ -169,4 +169,405 @@ document.addEventListener('DOMContentLoaded', () => {
         borderSliderRow.style.display = 'none';
     });
 
-    borderToggle.addEventListener('click', ()
+    borderToggle.addEventListener('click', () => {
+        borderToggle.classList.add('active');
+        fillToggle.classList.remove('active');
+        colorMode = 'border'; 
+        borderSliderRow.style.display = 'flex';
+    });
+
+    swatches.forEach(swatch => {
+        swatch.addEventListener('click', () => {
+            if (swatch.classList.contains('custom-color-selector')) {
+                hexPopup.style.display = 'flex'; return; 
+            }
+            hexPopup.style.display = 'none';
+
+            const activeObject = canvas.getActiveObject();
+            if (!activeObject) return; 
+
+            if (swatch.classList.contains('transparent-selector')) {
+                if (activeObject.type !== 'line') {
+                    if (colorMode === 'fill') activeObject.set('fill', 'transparent');
+                    else if (colorMode === 'border') {
+                        activeObject.set('stroke', 'transparent'); activeObject.set('strokeWidth', 0); 
+                    }
+                    canvas.renderAll();
+                }
+                return;
+            }
+
+            const selectedColor = swatch.style.backgroundColor;
+            const currentBorderWidth = parseInt(borderSizeSlider.value, 10);
+            
+            if (activeObject.type === 'line') {
+                activeObject.set('stroke', selectedColor);
+            } else if (activeObject.type === 'group') {
+                activeObject._objects.forEach(obj => {
+                    if (colorMode === 'fill') obj.set('fill', selectedColor);
+                    else if (colorMode === 'border') {
+                        obj.set('stroke', selectedColor);
+                        obj.set('strokeWidth', currentBorderWidth);
+                    }
+                });
+            } else {
+                if (colorMode === 'fill') activeObject.set('fill', selectedColor);
+                else if (colorMode === 'border') {
+                    activeObject.set('stroke', selectedColor); activeObject.set('strokeWidth', currentBorderWidth); 
+                }
+            }
+            canvas.renderAll();
+        });
+    });
+
+    hexInput.addEventListener('input', (e) => {
+        let cleanHex = e.target.value.replace(/[^0-9A-Fa-f]/g, '').toUpperCase();
+        e.target.value = cleanHex;
+        if (cleanHex.length === 3 || cleanHex.length === 6) {
+            const activeObject = canvas.getActiveObject();
+            if (activeObject) {
+                const finalColor = '#' + cleanHex; 
+                const currentBorderWidth = parseInt(borderSizeSlider.value, 10);
+
+                if (activeObject.type === 'line') activeObject.set('stroke', finalColor);
+                else if (activeObject.type === 'group') {
+                    activeObject._objects.forEach(obj => {
+                        if (colorMode === 'fill') obj.set('fill', finalColor);
+                        else if (colorMode === 'border') {
+                            obj.set('stroke', finalColor); obj.set('strokeWidth', currentBorderWidth);
+                        }
+                    });
+                } else {
+                    if (colorMode === 'fill') activeObject.set('fill', finalColor);
+                    else if (colorMode === 'border') {
+                        activeObject.set('stroke', finalColor); activeObject.set('strokeWidth', currentBorderWidth);
+                    }
+                }
+                canvas.renderAll(); 
+            }
+        }
+    });
+
+    borderSizeSlider.addEventListener('input', (e) => {
+        const val = parseInt(e.target.value, 10);
+        borderSizeValue.textContent = val;
+        
+        const activeObject = canvas.getActiveObject();
+        if (activeObject && colorMode === 'border') {
+            if (activeObject.type === 'line') {
+                activeObject.set('strokeWidth', val);
+            } else if (activeObject.type === 'group') {
+                activeObject._objects.forEach(obj => obj.set('strokeWidth', val));
+            } else {
+                activeObject.set('strokeWidth', val);
+            }
+            canvas.renderAll();
+        }
+    });
+
+    // ==========================================
+    // 5. TEXT TOOL & FONT SLIDER LOGIC
+    // ==========================================
+    const addTextBtn = document.querySelector('.add-text-button');
+    const textInputBox = document.querySelector('.text-input-box');
+    const fontSizeSlider = document.querySelector('.font-size-slider');
+    const fontSizeValue = document.querySelector('.font-size-value');
+
+    addTextBtn.addEventListener('click', () => {
+        const newText = new fabric.IText('Type your text here', {
+            fontFamily: 'Arial',
+            fontSize: parseInt(fontSizeSlider.value, 10),
+            fill: '#707070',
+            cornerColor: '#00FFED',
+            transparentCorners: false,
+            textAlign: 'center'
+        });
+        canvas.add(newText);
+        canvas.centerObject(newText);
+        canvas.setActiveObject(newText);
+        canvas.renderAll();
+        textInputBox.value = newText.text; 
+    });
+
+    textInputBox.addEventListener('input', (e) => {
+        const activeObject = canvas.getActiveObject();
+        if (activeObject && activeObject.type === 'i-text') {
+            activeObject.set('text', e.target.value); canvas.renderAll();
+        }
+    });
+
+    fontSizeSlider.addEventListener('input', (e) => {
+        const val = parseInt(e.target.value, 10);
+        fontSizeValue.textContent = val;
+        
+        const activeObject = canvas.getActiveObject();
+        if (activeObject && activeObject.type === 'i-text') {
+            activeObject.set('fontSize', val); canvas.renderAll();
+        }
+    });
+
+    const fontSearchBox = document.querySelector('.font-search-box');
+    const fontDropdownList = document.querySelector('.font-dropdown-list');
+    const fontLibrary = ["Arial", "Arial Black", "Book Antiqua", "Brush Script MT", "Comic Sans MS", "Courier New", "Garamond", "Georgia", "Impact", "Lucida Console", "Lucida Sans Unicode", "Palatino Linotype", "Tahoma", "Times New Roman", "Trebuchet MS", "Verdana"].sort(); 
+
+    fontLibrary.forEach(font => {
+        const fontItem = document.createElement('div');
+        fontItem.textContent = font;
+        fontItem.style.fontFamily = `"${font}", sans-serif`; 
+        fontItem.addEventListener('click', () => {
+            fontSearchBox.value = font; fontDropdownList.style.display = 'none'; 
+            const activeObject = canvas.getActiveObject();
+            if (activeObject && activeObject.type === 'i-text') {
+                activeObject.set('requestedFont', null); activeObject.set('fontFamily', font); canvas.renderAll();
+            }
+        });
+        fontDropdownList.appendChild(fontItem);
+    });
+
+    fontSearchBox.addEventListener('click', () => fontDropdownList.style.display = 'flex');
+    fontSearchBox.addEventListener('input', (e) => {
+        const searchTerm = e.target.value.toLowerCase();
+        const fontItems = fontDropdownList.querySelectorAll('div');
+        fontDropdownList.style.display = 'flex'; 
+        fontItems.forEach(item => {
+            item.style.display = item.textContent.toLowerCase().includes(searchTerm) ? 'block' : 'none';
+        });
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.custom-font-dropdown')) fontDropdownList.style.display = 'none';
+    });
+
+    const adobeRequestBox = document.querySelector('.adobe-request-box');
+    adobeRequestBox.addEventListener('input', (e) => {
+        const requestedFont = e.target.value.trim();
+        const activeObject = canvas.getActiveObject();
+        
+        if (!activeObject || activeObject.type !== 'i-text') {
+            if (requestedFont.length > 0) {
+                alert("Please add and select some text on the canvas before requesting a font!"); adobeRequestBox.value = "";
+            }
+            return;
+        }
+
+        if (requestedFont.length > 0) {
+            activeObject.set('requestedFont', requestedFont); fontSearchBox.value = `Requested: ${requestedFont}`;
+        } else {
+            activeObject.set('requestedFont', null); fontSearchBox.value = activeObject.fontFamily;
+        }
+    });
+
+    canvas.on('selection:created', syncTextToSidebar);
+    canvas.on('selection:updated', syncTextToSidebar);
+    canvas.on('text:changed', syncTextToSidebar);
+    canvas.on('selection:cleared', () => {
+        textInputBox.value = ''; fontSearchBox.value = ''; adobeRequestBox.value = '';
+    });
+
+    function syncTextToSidebar() {
+        const activeObject = canvas.getActiveObject();
+        if (activeObject && activeObject.type === 'i-text') {
+            textInputBox.value = activeObject.text;
+            fontSizeSlider.value = activeObject.fontSize;
+            fontSizeValue.textContent = Math.round(activeObject.fontSize);
+            
+            if (activeObject.requestedFont) {
+                fontSearchBox.value = `Requested: ${activeObject.requestedFont}`; adobeRequestBox.value = activeObject.requestedFont;
+            } else {
+                fontSearchBox.value = activeObject.fontFamily; adobeRequestBox.value = '';
+            }
+        } else {
+            textInputBox.value = ''; fontSearchBox.value = ''; adobeRequestBox.value = '';
+        }
+    }
+
+    // ==========================================
+    // 6. IMAGE UPLOAD LOGIC
+    // ==========================================
+    const imageUploadInput = document.getElementById('image-upload-input');
+    imageUploadInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const imageUrl = URL.createObjectURL(file);
+        fabric.Image.fromURL(imageUrl, (img) => {
+            const maxDimension = 250; 
+            if (img.width > maxDimension || img.height > maxDimension) {
+                const scale = Math.min(maxDimension / img.width, maxDimension / img.height);
+                img.scale(scale);
+            }
+            img.set({ cornerColor: '#00FFED', transparentCorners: false });
+            canvas.add(img); canvas.centerObject(img); canvas.setActiveObject(img); canvas.renderAll();
+        });
+        imageUploadInput.value = '';
+    });
+
+    // ==========================================
+    // 7. CLIPART PANEL LOGIC
+    // ==========================================
+    const clipartGrid = document.querySelector('.clipart-grid');
+    const clipartSVGs = [
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="none" stroke="#707070" stroke-width="8"/><circle cx="35" cy="40" r="6" fill="#707070"/><circle cx="65" cy="40" r="6" fill="#707070"/><path d="M 30 65 Q 50 85 70 65" fill="none" stroke="#707070" stroke-width="8" stroke-linecap="round"/></svg>',
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="#707070"><path d="M 55 10 L 25 55 L 45 55 L 40 90 L 80 40 L 55 40 Z" /></svg>',
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="#707070"><path d="M 10 80 L 90 80 L 90 90 L 10 90 Z M 10 70 L 20 30 L 40 55 L 50 20 L 60 55 L 80 30 L 90 70 Z" /></svg>',
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="#707070"><circle cx="30" cy="30" r="12"/><circle cx="50" cy="15" r="12"/><circle cx="70" cy="30" r="12"/><path d="M 25 60 C 25 45 40 40 50 40 C 60 40 75 45 75 60 C 80 80 65 90 50 90 C 35 90 20 80 25 60 Z"/></svg>',
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="#707070"><path d="M 50 10 Q 15 55 20 70 A 30 30 0 0 0 80 70 Q 85 55 50 10 Z"/></svg>',
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="20" fill="#707070"/><path d="M 50 10 L 50 20 M 50 80 L 50 90 M 10 50 L 20 50 M 80 50 L 90 50 M 22 22 L 29 29 M 71 71 L 78 78 M 22 78 L 29 71 M 71 22 L 78 29" stroke="#707070" stroke-width="8" stroke-linecap="round"/></svg>',
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="#707070" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"><path d="M 20 55 L 45 80 L 85 20"/></svg>',
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="20" r="10" fill="none" stroke="#707070" stroke-width="8"/><path d="M 50 30 L 50 90 M 30 45 L 70 45 M 20 70 A 30 30 0 0 0 80 70 M 10 70 L 30 70 M 70 70 L 90 70" stroke="#707070" stroke-width="8" stroke-linecap="round" fill="none"/></svg>'
+    ];
+    clipartGrid.innerHTML = ''; 
+    clipartSVGs.forEach(svgString => {
+        const btn = document.createElement('button');
+        btn.innerHTML = svgString; 
+        btn.addEventListener('click', () => {
+            fabric.loadSVGFromString(svgString, (objects, options) => {
+                const clipartGroup = fabric.util.groupSVGElements(objects, options);
+                clipartGroup.scaleToWidth(100);
+                clipartGroup.set({ cornerColor: '#00FFED', transparentCorners: false });
+                canvas.add(clipartGroup); canvas.centerObject(clipartGroup); canvas.setActiveObject(clipartGroup); canvas.renderAll();
+            });
+        });
+        clipartGrid.appendChild(btn);
+    });
+
+    // ==========================================
+    // 8. REVIEW FINAL PROOF & CLOUDINARY UPLOAD
+    // ==========================================
+    const mainReviewBtn = document.querySelector('.review-button'); 
+    const reviewOverlay = document.getElementById('review-overlay-screen');
+    const goBackBtn = document.querySelector('.go-back-button');
+    const approveCartBtn = document.querySelector('.review-lightbox .review-button');
+    const previewContainer = document.querySelector('.product-preview');
+
+    const reviewFrontBtn = document.getElementById('review-Front');
+    const reviewBackBtn = document.getElementById('review-Back');
+    
+    let frontProofImage = null;
+    let backProofImage = null;
+
+    // Helper function that patiently waits for the canvas to finish rendering
+    const loadState = (state) => new Promise(resolve => canvas.loadFromJSON(state, resolve));
+
+    mainReviewBtn.addEventListener('click', async () => {
+        // Save the exact state they are currently looking at
+        canvasStates[currentSide] = canvas.toJSON(['requestedFont']);
+        canvas.discardActiveObject().renderAll();
+
+        // Check which side they are on, capture it, patiently swap, capture the other, and swap back!
+        if (currentSide === 'Front') {
+            frontProofImage = canvas.toDataURL({ format: 'png', quality: 1.0 });
+            if (canvasStates['Back']) {
+                await loadState(canvasStates['Back']);
+                backProofImage = canvas.toDataURL({ format: 'png', quality: 1.0 });
+                await loadState(canvasStates['Front']); // Return to normal
+                canvas.renderAll();
+            } else {
+                backProofImage = null;
+            }
+        } else {
+            backProofImage = canvas.toDataURL({ format: 'png', quality: 1.0 });
+            if (canvasStates['Front']) {
+                await loadState(canvasStates['Front']);
+                frontProofImage = canvas.toDataURL({ format: 'png', quality: 1.0 });
+                await loadState(canvasStates['Back']); // Return to normal
+                canvas.renderAll();
+            } else {
+                frontProofImage = null;
+            }
+        }
+
+        // Render the Front proof to start
+        renderReviewScreen('Front');
+
+        reviewFrontBtn.classList.add('active');
+        reviewBackBtn.classList.remove('active');
+        reviewOverlay.style.display = 'flex';
+    });
+
+    // Function to brilliantly composite the transparent design over the shirt background
+    function renderReviewScreen(side) {
+        const imgData = side === 'Front' ? frontProofImage : backProofImage;
+        const bgUrl = bgImages[side];
+        
+        if (imgData) {
+            previewContainer.innerHTML = `
+                <div style="position:relative; width: 400px; height: 469px;">
+                    <img src="${bgUrl}" style="position:absolute; top:0; left:0; width:100%; height:100%; transform: ${side === 'Back' ? 'scaleX(-1)' : 'scaleX(1)'};" />
+                    <img src="${imgData}" style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:10;" />
+                </div>
+            `;
+        } else {
+            previewContainer.innerHTML = `<p style="color:#707070; font-family:'Segoe UI', sans-serif; font-size: 20px;">No design on ${side}</p>`;
+        }
+    }
+
+    reviewFrontBtn.addEventListener('click', () => {
+        reviewFrontBtn.classList.add('active');
+        reviewBackBtn.classList.remove('active');
+        renderReviewScreen('Front');
+    });
+
+    reviewBackBtn.addEventListener('click', () => {
+        reviewBackBtn.classList.add('active');
+        reviewFrontBtn.classList.remove('active');
+        renderReviewScreen('Back');
+    });
+
+    goBackBtn.addEventListener('click', () => {
+        reviewOverlay.style.display = 'none'; 
+    });
+
+    // -- 5. "Approve Design & Add to Cart" (The Cloudinary Upload) --
+    approveCartBtn.addEventListener('click', async () => {
+        
+        // 1. Change the button to show the customer it's working
+        approveCartBtn.innerText = "⏳ Uploading Design... Please Wait";
+        approveCartBtn.style.backgroundColor = "#CCCCCC";
+        approveCartBtn.disabled = true;
+
+        const cloudName = 'ddffghhew'; // Your exact Cloud Name
+        const uploadPreset = 'ml_default'; // Your exact Unsigned Preset
+
+        try {
+            // 2. Package the Front Proof Image
+            const formData = new FormData();
+            formData.append('file', frontProofImage);
+            formData.append('upload_preset', uploadPreset);
+
+            // 3. Send it securely to Cloudinary
+            const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+            
+            if (data.secure_url) {
+                // 4. Success! We got the live link back. 
+                const finalDesignURL = data.secure_url;
+                
+                // 5. Package the URL into a message object
+                const orderPayload = {
+                    type: 'IMAK_CUSTOMIZER_SUCCESS',
+                    designUrl: finalDesignURL
+                };
+
+                // 6. Broadcast the message up to the Squarespace window
+                window.parent.postMessage(orderPayload, '*');
+
+            } else {
+                throw new Error("Upload failed to return a URL.");
+            }
+
+        } catch (error) {
+            console.error("Cloudinary Upload Error:", error);
+            alert("There was an network issue saving your design. Please try again.");
+            // Reset button if it fails
+            approveCartBtn.innerText = "Approve Design & Add to Cart";
+            approveCartBtn.style.backgroundColor = "#00FFED";
+            approveCartBtn.disabled = false;
+        }
+    });
+
+}); // DO NOT DELETE THIS BRACKET! It ends the DOMContentLoaded function.
