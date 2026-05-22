@@ -514,14 +514,57 @@ document.addEventListener('DOMContentLoaded', () => {
         reviewOverlay.style.display = 'none'; 
     });
 
-    approveCartBtn.addEventListener('click', () => {
-        const finalOrderData = {
-            frontCanvasJSON: canvasStates['Front'],
-            backCanvasJSON: canvasStates['Back'],
-            frontProofBase64: frontProofImage,
-            backProofBase64: backProofImage,
-            customFontRequests: { front: [], back: [] }
-        };
+    // -- 5. "Approve Design & Add to Cart" (The Cloudinary Upload) --
+    approveCartBtn.addEventListener('click', async () => {
+        
+        // 1. Change the button to show the customer it's working
+        approveCartBtn.innerText = "⏳ Uploading Design... Please Wait";
+        approveCartBtn.style.backgroundColor = "#CCCCCC";
+        approveCartBtn.disabled = true;
+
+        const cloudName = 'ddffghhew'; // Your exact Cloud Name
+        const uploadPreset = 'ml_default'; // Your exact Unsigned Preset
+
+        try {
+            // 2. Package the Front Proof Image
+            const formData = new FormData();
+            formData.append('file', frontProofImage);
+            formData.append('upload_preset', uploadPreset);
+
+            // 3. Send it securely to Cloudinary
+            const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+            
+            if (data.secure_url) {
+                // 4. Success! We got the live link back. 
+                const finalDesignURL = data.secure_url;
+                
+                // 5. Package the URL into a message object
+                const orderPayload = {
+                    type: 'IMAK_CUSTOMIZER_SUCCESS',
+                    designUrl: finalDesignURL
+                };
+
+                // 6. Broadcast the message up to the Squarespace window
+                window.parent.postMessage(orderPayload, '*');
+
+            } else {
+                throw new Error("Upload failed to return a URL.");
+            }
+
+        } catch (error) {
+            console.error("Cloudinary Upload Error:", error);
+            alert("There was an network issue saving your design. Please try again.");
+            // Reset button if it fails
+            approveCartBtn.innerText = "Approve Design & Add to Cart";
+            approveCartBtn.style.backgroundColor = "#00FFED";
+            approveCartBtn.disabled = false;
+        }
+    });
 
         if (canvasStates['Front'] && canvasStates['Front'].objects) {
             canvasStates['Front'].objects.forEach(obj => {
