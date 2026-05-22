@@ -35,6 +35,9 @@ body {
     box-shadow: 0px 8px 10px rgba(0, 0, 0, 0.3); 
     display: flex;
     flex-direction: column; 
+    /* NEW: AUTO-FIT SCALING MAGIC */
+    transform: scale(min(1, calc(95vw / 1050), calc(95vh / 750)));
+    transform-origin: center center;
 }
 
 .customizer-content {
@@ -666,6 +669,9 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    /* NEW: AUTO-FIT SCALING MAGIC */
+    transform: scale(min(1, calc(95vw / 850), calc(95vh / 950)));
+    transform-origin: center center;
 }
 
 .product-preview {
@@ -828,7 +834,7 @@ body {
     margin: 0 auto 15px auto;
 }
 
-@media (max-width: 990px) {
+@media (max-width: 800px) {
     .lightbox-overlay {
         display: none !important; 
     }
